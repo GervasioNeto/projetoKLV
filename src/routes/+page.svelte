@@ -13,20 +13,19 @@
 	}
 
   const url = "https://67805ddd85151f714b06955d.mockapi.io/currencies";
-  let currenciesList = []; // Lista de moedas
+  let currenciesList = [];
 
-  // Função para buscar dados da API
+  // buscar dados API
   async function fetchData() {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      currenciesList = data; // Atribui os dados à lista
+      currenciesList = data;
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
     }
   }
 
-  // Carrega os dados quando o componente é montado
   onMount(() => {
     fetchData();
   });
