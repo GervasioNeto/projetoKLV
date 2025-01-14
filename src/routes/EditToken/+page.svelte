@@ -1,9 +1,54 @@
 <script>
   import { goto } from "$app/navigation";
+  import { onMount } from "svelte";
+  import { page } from '$app/stores';
+
+
+  const url = "https://67805ddd85151f714b06955d.mockapi.io/currencies";
+  
+  let currenciesList = [];
+  let id = $page.url.searchParams.get('id')
+
+  // buscar dados API
+  async function fetchData() {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      currenciesList = data;
+    } catch (error) {
+      console.error("Erro ao carregar dados:", error);
+    }
+  }
+
+  onMount(() => {
+    fetchData();
+  });
+
 
   function goToHome() {
     goto("/");
   }
+  
+function deleteCurrency(){
+  console.log(id);
+  fetch(`${url}/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        // handle error
+      })
+      .then((currency) => {
+        console.log("deu bom");
+        goToHome();
+      })
+      .catch((error) => {
+        console.log("deu ruim");
+      }); 
+
+}
 </script>
 
 <main
@@ -61,7 +106,7 @@
 
       <!-- Botões Save e Remove Token -->
       <div class="flex justify-between items-center">
-        <button
+        <button on:click={deleteCurrency}
           class="bg-[#920000] text-white border-none p-1.5 w-32 rounded-md cursor-pointer text-base font-bold hover:bg-red-600"
           >Remove</button
         >

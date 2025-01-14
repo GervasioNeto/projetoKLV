@@ -1,9 +1,65 @@
 <script>
   import { goto } from "$app/navigation";
+  import { onMount } from "svelte";
 
   function goToHome() {
     goto("/");
   }
+
+  const url = "https://67805ddd85151f714b06955d.mockapi.io/currencies";
+  let currenciesList = [];
+
+  let name;
+  let value;
+
+  // buscar dados API
+  async function fetchData() {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      currenciesList = data;
+    } catch (error) {
+      console.error("Erro ao carregar dados:", error);
+    }
+  }
+
+  onMount(() => {
+    fetchData();
+  });
+
+  function exibir() {
+    console.log(name, value);
+  }
+
+  $: postCurrencie = () =>{
+    const newCurrencies = {
+      name: name,
+      value: Number(value),
+    };
+
+    console.log(newCurrencies);
+
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify(newCurrencies),
+      headers: {
+        'Content-Type': 'application/json'
+      } 
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        // handle error
+      })
+      .then((currency) => {
+        console.log("deu bom");
+        goToHome();
+      })
+      .catch((error) => {
+        console.log("deu ruim");
+      });
+  } 
 </script>
 
 <main
@@ -17,7 +73,11 @@
 
     <!-- Wish Wallet -->
     <div class="flex justify-start items-center my-5">
-      <img class="w-12 mr-2 mt-1" src="shooting-star.svg" alt="Wish Wallet Icon" />
+      <img
+        class="w-12 mr-2 mt-1"
+        src="shooting-star.svg"
+        alt="Wish Wallet Icon"
+      />
       <h1 class="text-4xl font-bold m-0">Wish Wallet</h1>
     </div>
 
@@ -33,10 +93,11 @@
 
     <!-- Formulário -->
     <form class="flex flex-col gap-1 ml-10">
-      <label class="text-left text-base font-bold text-white " for="token"
+      <label class="text-left text-base font-bold text-white" for="token"
         >Token</label
       >
       <input
+        bind:value={name}
         class="p-2.5 text-base border border-gray-700 rounded-md bg-white text-black placeholder-gray-400 mb-10"
         type="text"
         id="token"
@@ -48,6 +109,7 @@
         >Balance</label
       >
       <input
+        bind:value
         class="p-2.5 text-base border border-gray-700 rounded-md bg-white text-black placeholder-gray-400 mb-10"
         type="text"
         id="balance"
@@ -57,6 +119,7 @@
 
       <div class="flex justify-between items-center">
         <button
+          on:click={postCurrencie}
           class="bg-[#aa33b5] text-white border-none p-1.5 w-32 rounded-md cursor-pointer text-base font-bold hover:bg-purple-500 ml-auto"
           >Save</button
         >

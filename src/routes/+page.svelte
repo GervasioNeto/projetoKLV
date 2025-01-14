@@ -1,15 +1,15 @@
 <script>
 
   import { onMount } from "svelte";
-
   import { goto } from '$app/navigation';
+
   
 	function goToAddToken() {
 	  goto('/AddToken');
 	}
   
-	function goToEditToken() {
-	  goto('/EditToken');
+	function goToEditToken(id) {
+	  goto(`/EditToken?id=${id}`);
 	}
 
   const url = "https://67805ddd85151f714b06955d.mockapi.io/currencies";
@@ -29,6 +29,7 @@
   onMount(() => {
     fetchData();
   });
+
 </script>
 
 <main
@@ -61,7 +62,7 @@
     <span class="flex items-center">
       <button 
         class="bg-transparent border-none cursor-pointer mr-1"
-        on:click={goToEditToken}>
+        on:click={()=>goToEditToken(currency.id)}>
         <img src="edit-icon.svg" alt="Edit Icon" class="w-5 h-5 mr-4 mt-1" />
       </button>
       {currency.name}
