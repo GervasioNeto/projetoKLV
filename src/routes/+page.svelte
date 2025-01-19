@@ -8,10 +8,14 @@
 	  goto('/AddToken');
 	}
   
-	function goToEditToken(id) {
-	  goto(`/EditToken?id=${id}`);
-	}
+	// function goToEditToken(id) {
+	//   goto(`/EditToken?id=${id}`);
+	// }
 
+  function goToEditToken(id) {
+	  goto(`/edit/${id}`);
+	}
+  
   const url = "https://67805ddd85151f714b06955d.mockapi.io/currencies";
   let currenciesList = [];
 
@@ -38,13 +42,13 @@
 <div class="text-center w-[550px] p-5 rounded-[10px]">
     <!-- Logo -->
     <div class="flex justify-center items-center">
-      <img src="logo.svg" alt="Klever Logo" class="w-[200px] mb-16" />
+      <img src="/logo.svg" alt="Klever Logo" class="w-[200px] mb-16" />
     </div>
 
     <!-- Wish Wallet -->
     <div class="flex items-center justify-between mb-6">
       <div class="flex items-center">
-        <img class="w-12 mr-2 mt-1" src="shooting-star.svg" alt="Wish Wallet Icon" />
+        <img class="w-12 mr-2 mt-1" src="/shooting-star.svg" alt="Wish Wallet Icon" />
         <h1 class="text-4xl font-bold m-0">Wish Wallet</h1>
       </div>
       <button on:click={goToAddToken} class="bg-[#aa33b5] text-white px-6 py-2 font-bold text-base rounded-lg">Add Token</button>

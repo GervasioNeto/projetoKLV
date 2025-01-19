@@ -5,30 +5,50 @@
 
   const url = "https://67805ddd85151f714b06955d.mockapi.io/currencies";
 
-  let currenciesList = [];
-  let id = $page.url.searchParams.get("id");
+  // let currenciesList = [];
+
+  let id = $page.params.id;
+  // let id = $page.url.searchParams.get("id");
 
   //Form
   let name = "";
   let value = "";
 
+  function goToHome() {
+    goto("/");
+  }
+
   // buscar dados API
-  async function fetchData() {
+  async function fetchToken() {
     try {
-      const response = await fetch(url);
-      const data = await response.json();
-      currenciesList = data;
+      const response = await fetch(`${url}/${id}`); // Busca o token pelo ID
+      if (!response.ok) throw new Error("Erro ao carregar dados do token.");
+      const token = await response.json();
+      name = token.name;
+      value = token.value;
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
     }
   }
 
+  // Chama a função ao montar o componente
   onMount(() => {
-    fetchData();
+    if (id) {
+      fetchToken();
+    }
   });
 
-  function goToHome() {
-    goto("/");
+  // Validação do formulário
+  function validateForm() {
+    if (name.length < 3 || name.length > 8) {
+      alert("O nome deve ter entre 3 e 8 caracteres.");
+      return false;
+    }
+    if (isNaN(value) || value <= 0) {
+      alert("O valor precisa ser um número maior que zero.");
+      return false;
+    }
+    return true;
   }
 
   function deleteCurrency() {
@@ -51,11 +71,17 @@
       });
   }
 
-  function updateCurrency() {
+  function updateCurrency(event) {
+    event.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+    
     // Preparar dados para envio
     const updatedCurrency = {
-      name,
-      value,
+      name: name,
+      value: Number(value),
     };
 
     fetch(`${url}/${id}`, {
@@ -87,14 +113,14 @@
   <div class="text-center w-[550px] p-5 rounded-[10px]">
     <!-- Logo -->
     <div class="flex justify-center items-center">
-      <img src="logo.svg" alt="Klever Logo" class="w-[200px] mb-10" />
+      <img src="/logo.svg" alt="Klever Logo" class="w-[200px] mb-10" />
     </div>
 
     <!-- Wish Wallet -->
     <div class="flex justify-start items-center my-5">
       <img
         class="w-12 mr-2 mt-1"
-        src="shooting-star.svg"
+        src="/shooting-star.svg"
         alt="Wish Wallet Icon"
       />
       <h1 class="text-4xl font-bold m-0">Wish Wallet</h1>
@@ -128,7 +154,7 @@
         >Balance</label
       >
       <input
-        bind:value={value}
+      bind:value={value}
         class="p-2.5 text-base border border-gray-700 rounded-md bg-white text-black placeholder-gray-400 mb-10"
         type="text"
         id="balance"
