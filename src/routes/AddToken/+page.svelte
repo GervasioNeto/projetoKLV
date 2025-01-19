@@ -45,7 +45,7 @@
   event.preventDefault(); 
 
   if (!validateForm()) {
-    return; // falhar validade encerra
+    return; // falhar validate encerra
   }
 
   const newCurrency = {
