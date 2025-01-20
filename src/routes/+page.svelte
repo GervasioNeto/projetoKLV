@@ -1,39 +1,14 @@
 <script>
-
-  import { onMount } from "svelte";
+  import { currencies } from '../stores/currencies';
   import { goto } from '$app/navigation';
 
-  
-	function goToAddToken() {
-	  goto('/AddToken');
-	}
-  
-	// function goToEditToken(id) {
-	//   goto(`/EditToken?id=${id}`);
-	// }
-
-  function goToEditToken(id) {
-	  goto(`/edit/${id}`);
-	}
-  
-  const url = "https://67805ddd85151f714b06955d.mockapi.io/currencies";
-  let currenciesList = [];
-
-  // buscar dados API
-  async function fetchData() {
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      currenciesList = data;
-    } catch (error) {
-      console.error("Erro ao carregar dados:", error);
-    }
+  function goToAddToken() {
+    goto('/AddToken');
   }
 
-  onMount(() => {
-    fetchData();
-  });
-
+  function goToEditToken(id) {
+    goto(`/edit/${id}`);
+  }
 </script>
 
 <main
