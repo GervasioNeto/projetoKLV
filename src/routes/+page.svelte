@@ -1,5 +1,5 @@
 <script>
-  import { currencies } from '../stores/currencies';
+  import { currencies } from './stores/currencies';
   import { goto } from '$app/navigation';
 
   function goToAddToken() {
@@ -36,18 +36,19 @@
     </div>
 
 <!-- List of Currencies -->
-{#each currenciesList as currency (currency.id)}
-  <div class="flex justify-between text-4xl font-bold py-2">
-    <span class="flex items-center">
-      <button 
-        class="bg-transparent border-none cursor-pointer mr-1"
-        on:click={()=>goToEditToken(currency.id)}>
-        <img src="edit-icon.svg" alt="Edit Icon" class="w-5 h-5 mr-4 mt-1" />
-      </button>
-      {currency.name}
-    </span>
-    <span class="">{currency.value.toLocaleString()}</span>
-  </div>
+{#each $currencies as currency (currency.id)}
+<div class="flex justify-between text-4xl font-bold py-2">
+  <span class="flex items-center">
+    <button
+      class="bg-transparent border-none cursor-pointer mr-1"
+      on:click={() => goToEditToken(currency.id)}
+    >
+      <img src="edit-icon.svg" alt="Edit Icon" class="w-5 h-5 mr-4 mt-1" />
+    </button>
+    {currency.name}
+  </span>
+  <span>{currency.value.toLocaleString()}</span>
+</div>
 {/each}
 
 </main>

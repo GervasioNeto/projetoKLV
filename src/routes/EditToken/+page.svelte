@@ -5,7 +5,7 @@
 
   const url = "https://67805ddd85151f714b06955d.mockapi.io/currencies";
 
-  let currenciesList = [];
+  // let currenciesList = [];
   let id = $page.url.searchParams.get("id");
 
   //Form

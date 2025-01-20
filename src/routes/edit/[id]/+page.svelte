@@ -2,15 +2,9 @@
   import { goto } from "$app/navigation";
   import { onMount } from "svelte";
   import { page } from "$app/stores";
-
-  const url = "https://67805ddd85151f714b06955d.mockapi.io/currencies";
-
-  // let currenciesList = [];
+  import { currencies } from "../../stores/currencies"; // Importando a store de currencies
 
   let id = $page.params.id;
-  // let id = $page.url.searchParams.get("id");
-
-  //Form
   let name = "";
   let value = "";
 
@@ -18,27 +12,16 @@
     goto("/");
   }
 
-  // buscar dados API
-  async function fetchToken() {
-    try {
-      const response = await fetch(`${url}/${id}`); // Busca o token pelo ID
-      if (!response.ok) throw new Error("Erro ao carregar dados do token.");
-      const token = await response.json();
+  // Carregar o token do store local usando o ID
+  onMount(() => {
+    const token = $currencies.find((c) => c.id === Number(id)); // Encontrar o token pelo id
+    if (token) {
       name = token.name;
       value = token.value;
-    } catch (error) {
-      console.error("Erro ao carregar dados:", error);
-    }
-  }
-
-  // Chama a função ao montar o componente
-  onMount(() => {
-    if (id) {
-      fetchToken();
     }
   });
 
-  // Validação do formulário
+  // Validação do f
   function validateForm() {
     if (name.length < 3 || name.length > 8) {
       alert("O nome deve ter entre 3 e 8 caracteres.");
@@ -51,59 +34,32 @@
     return true;
   }
 
-  function deleteCurrency() {
-    console.log(id);
-    fetch(`${url}/${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        // handle error
-      })
-      .then((currency) => {
-        console.log("deu bom");
-        goToHome();
-      })
-      .catch((error) => {
-        console.log("deu ruim");
-      });
-  }
-
+  // Atualiza o token na store
   function updateCurrency(event) {
     event.preventDefault();
 
     if (!validateForm()) {
       return;
     }
-    
-    // Preparar dados para envio
-    const updatedCurrency = {
-      name: name,
-      value: Number(value),
-    };
 
-    fetch(`${url}/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedCurrency),
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        throw new Error("Erro ao atualizar");
-      })
-      .then((currency) => {
-        console.log("Atualizado com sucesso:", currency);
-        goToHome();
-      })
-      .catch((error) => {
-        console.error("Erro ao atualizar:", error);
-      });
+    // Atualiza
+    currencies.update((current) => {
+      const updatedCurrencies = current.map((token) =>
+        token.id === Number(id)
+          ? { ...token, name, value: Number(value) }
+          : token
+      );
+      return updatedCurrencies;
+    });
+    goToHome();
+  }
+
+  // Deleta o token da store
+  function deleteCurrency() {
+    currencies.update((current) => {
+      return current.filter((token) => token.id !== Number(id));
+    });
+    goToHome();
   }
 </script>
 
@@ -137,7 +93,10 @@
     </div>
 
     <!-- Formulário -->
-    <form class="flex flex-col gap-1 ml-10">
+    <form
+      class="flex flex-col gap-1 ml-10"
+      on:submit|preventDefault={updateCurrency}
+    >
       <label class="text-left text-base font-bold text-white" for="token"
         >Token</label
       >
@@ -154,9 +113,9 @@
         >Balance</label
       >
       <input
-      bind:value={value}
+        bind:value
         class="p-2.5 text-base border border-gray-700 rounded-md bg-white text-black placeholder-gray-400 mb-10"
-        type="text"
+        type="number"
         id="balance"
         placeholder=""
         required
@@ -170,7 +129,7 @@
           >Remove</button
         >
         <button
-          on:click={updateCurrency}
+          type="submit"
           class="bg-[#aa33b5] text-white border-none p-1.5 w-32 rounded-md cursor-pointer text-base font-bold hover:bg-purple-500"
           >Save</button
         >
