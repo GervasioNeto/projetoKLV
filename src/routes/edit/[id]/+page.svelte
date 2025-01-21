@@ -31,20 +31,20 @@
     }
   }
 
-  // Chama a função ao montar o componente
+  //montar o componente
   onMount(() => {
     if (id) {
       fetchToken();
     }
   });
 
-  // Validação do formulário
+  // Validação do form
   function validateForm() {
     if (name.length < 3 || name.length > 8) {
       alert("O nome deve ter entre 3 e 8 caracteres.");
       return false;
     }
-    if (isNaN(value) || value <= 0) {
+    if (isNaN(Number(value)) || Number(value) <= 0) {
       alert("O valor precisa ser um número maior que zero.");
       return false;
     }
@@ -75,7 +75,7 @@
     event.preventDefault();
 
     if (!validateForm()) {
-      return;
+      return; //encerra
     }
     
     // Preparar dados para envio
