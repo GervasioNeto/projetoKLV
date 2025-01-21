@@ -1,6 +1,6 @@
 <script>
   import { goto } from "$app/navigation";
-  import { currencies } from '../stores/currencies';// Importando o store local
+  import { currencies } from '../stores/currencies';
 
   $: console.log($currencies);
 
@@ -25,15 +25,15 @@
     return true;
   }
 
-    // Adicionar novo token ao store
+    // Add nv tkn
     function addToken(event) {
     event.preventDefault();
 
     if (!validateForm()) {
-      return; // Impede o envio
+      return;
     }
 
-    // Atualiza o store com o novo token
+    // Atualizar c novo tkn
     currencies.update((current) => {
     const newId = current.length ? current[current.length - 1].id + 1 : 1;  // Pegando o último id e somando 1
     return [...current, { id: newId, name, value: Number(value) }];
