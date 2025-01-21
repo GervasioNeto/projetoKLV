@@ -28,13 +28,19 @@
     fetchData();
   });
 
+
+
   // Validação do formulário
   function validateForm() {
+    if(currenciesList.some((currency) => currency.name === name)){
+      alert("O nome já existe.");
+      return false;
+    }
     if (name.length < 3 || name.length > 8) {
       alert("O nome deve ter entre 3 e 8 caracteres.");
       return false; //impede
     }
-    if (isNaN(value) || value <= 0) {
+    if (isNaN(Number(value)) || Number(value) <= 0) {
       alert("O valor precisa ser um número maior que zero.");
       return false; 
     }

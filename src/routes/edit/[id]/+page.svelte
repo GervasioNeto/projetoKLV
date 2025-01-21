@@ -40,6 +40,7 @@
 
   // Validação do form
   function validateForm() {
+    
     if (name.length < 3 || name.length > 8) {
       alert("O nome deve ter entre 3 e 8 caracteres.");
       return false;
