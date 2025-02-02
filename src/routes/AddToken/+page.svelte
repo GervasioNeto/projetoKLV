@@ -30,7 +30,6 @@
 
 
   
-
   // Validação do formulário
   function validateForm() {
     if(currenciesList.some((currency) => currency.name === name)){
