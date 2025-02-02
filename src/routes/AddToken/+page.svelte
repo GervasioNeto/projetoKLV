@@ -9,6 +9,7 @@
   const url = "https://67805ddd85151f714b06955d.mockapi.io/currencies";
   let currenciesList = [];
 
+  
   //Form
   let name = "";
   let value = "";
